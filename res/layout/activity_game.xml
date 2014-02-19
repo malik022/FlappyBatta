@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameActivity" >
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_general"
+        android:visibility="visible" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/ground_height"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_land_disp"
+        android:scaleType="fitXY" />
+
+    <SurfaceView
+        android:id="@+id/surface_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#00000000"
+        android:visibility="visible" />
+
+</RelativeLayout>
