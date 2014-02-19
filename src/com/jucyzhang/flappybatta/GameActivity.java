@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.umeng.update.UmengUpdateAgent;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -65,6 +67,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
     holder.addCallback(this);
     holder.setFormat(PixelFormat.TRANSLUCENT);
     loadRes();
+    UmengUpdateAgent.update(this);
   }
 
   @Override
