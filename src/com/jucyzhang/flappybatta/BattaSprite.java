@@ -37,7 +37,8 @@ public class BattaSprite implements Sprite {
         / birds[0].getIntrinsicHeight();
     width = ViewUtil.getScreenWidth(context);
     height = ViewUtil.getScreenHeight(context);
-    X = width / 2 - birdWidth / 2;
+    int xPosition = ViewUtil.dipResourceToPx(context, R.dimen.bird_position_x);
+    X = width / 2 - birdWidth / 2 - xPosition;
     currentHeight = height / 2 - birdHeight / 2;
     acceleration = ViewUtil.dipResourceToFloat(context,
         R.dimen.bird_acceleration);
@@ -73,13 +74,15 @@ public class BattaSprite implements Sprite {
 
   @Override
   public void onDraw(Canvas canvas, Paint globalPaint, int status) {
-    if (status == STATUS_NOT_STARTED) {
-      return;
-    }
     if (count >= 4 * FLY_COUNT) {
       count = 0;
     }
-    currentHeight += currentSpeed;
+    if (status != Sprite.STATUS_NOT_STARTED) {
+      currentHeight += currentSpeed;
+      synchronized (this) {
+        currentSpeed += acceleration;
+      }
+    }
     if (currentHeight <= 0) {
       currentHeight = 0;
     }
@@ -91,9 +94,6 @@ public class BattaSprite implements Sprite {
         + birdWidth + " birdHeight:" + birdHeight);
     bird.setBounds(X, currentHeight, X + birdWidth, currentHeight + birdHeight);
     bird.draw(canvas);
-    synchronized (this) {
-      currentSpeed += acceleration;
-    }
   }
 
   @Override
