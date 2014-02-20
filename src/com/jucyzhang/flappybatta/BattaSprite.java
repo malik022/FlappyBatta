@@ -79,15 +79,18 @@ public class BattaSprite implements Sprite {
     if (count >= 4 * FLY_COUNT) {
       count = 0;
     }
+    currentHeight += currentSpeed;
+    if (currentHeight <= 0) {
+      currentHeight = 0;
+    }
+    if (currentHeight + birdHeight > maxHeight) {
+      currentHeight = maxHeight - birdHeight;
+    }
     Drawable bird = birds[(count++) / FLY_COUNT];
     Log.d(TAG, "X:" + X + " currentHeight:" + currentHeight + " birdWidth:"
         + birdWidth + " birdHeight:" + birdHeight);
     bird.setBounds(X, currentHeight, X + birdWidth, currentHeight + birdHeight);
     bird.draw(canvas);
-    currentHeight += currentSpeed;
-    if (currentHeight <= 0) {
-      currentHeight = 0;
-    }
     synchronized (this) {
       currentSpeed += acceleration;
     }
@@ -100,7 +103,7 @@ public class BattaSprite implements Sprite {
 
   @Override
   public boolean isHit(Sprite sprite) {
-    return currentHeight + birdHeight > maxHeight;
+    return currentHeight + birdHeight >= maxHeight;
   }
 
   public void onTap() {
