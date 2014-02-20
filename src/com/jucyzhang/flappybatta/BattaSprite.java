@@ -100,7 +100,7 @@ public class BattaSprite implements Sprite {
 
   @Override
   public boolean isHit(Sprite sprite) {
-    return currentHeight > maxHeight;
+    return currentHeight + birdHeight > maxHeight;
   }
 
   public void onTap() {
