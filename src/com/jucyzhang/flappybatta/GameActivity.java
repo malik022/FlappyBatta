@@ -111,8 +111,17 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   }
 
   public void showRestartDialog() {
+    int highest = PrefUtil.getHighestScore(this);
+    String text = null;
+    if (currentPoint > highest) {
+      highest = currentPoint;
+      PrefUtil.setHighestScore(this, currentPoint);
+    } else {
+    }
+    text = "本次分数:" + currentPoint + "\n历史高分:" + highest;
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("本次分数:" + currentPoint);
+    builder.setTitle("Game Over");
+    builder.setMessage(text);
     builder.setPositiveButton("再玩一次", new DialogInterface.OnClickListener() {
 
       @Override
