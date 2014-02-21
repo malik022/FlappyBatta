@@ -9,6 +9,7 @@ import com.umeng.update.UmengUpdateAgent;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -43,6 +44,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private boolean surfaceCreated = false;;
   private Thread drawingTheard;
   private int[] soundIds;
+  private Dialog alertDialog;
 
   private static final int SOUND_DIE = 0;
   private static final int SOUND_HIT = 1;
@@ -126,6 +128,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        playSwooshing();
         restart();
       }
     });
@@ -133,11 +136,12 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        playSwooshing();
         finish();
       }
     });
     builder.setCancelable(false);
-    builder.show();
+    alertDialog = builder.show();
   }
 
   private void restart() {
@@ -155,6 +159,10 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
       blockerCount = 0;
       currentPoint = 0;
       currentStatus = Sprite.STATUS_NOT_STARTED;
+      if (alertDialog != null && alertDialog.isShowing()) {
+        alertDialog.dismiss();
+        alertDialog = null;
+      }
       if (surfaceCreated) {
         startDrawingThread();
       }
@@ -305,6 +313,18 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
       public void run() {
         if (!isFinishing()) {
           soundPool.play(soundIds[SOUND_HIT], 0.5f, 0.5f, 1, 0, 1);
+        }
+      }
+    });
+  }
+
+  private void playSwooshing() {
+    runOnUiThread(new Runnable() {
+
+      @Override
+      public void run() {
+        if (!isFinishing()) {
+          soundPool.play(soundIds[SOUND_SWOOSHING], 0.5f, 0.5f, 1, 0, 1);
         }
       }
     });
