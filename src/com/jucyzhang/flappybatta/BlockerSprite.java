@@ -18,9 +18,11 @@ public class BlockerSprite implements Sprite {
   private Drawable up;
   private Drawable down;
   private float speed;
+  private final int X;
+  private boolean scored = false;
 
   public static BlockerSprite obtainRandom(Context context, Drawable up,
-      Drawable down) {
+      Drawable down, int X) {
     int height = ViewUtil.getScreenHeight(context);
     int gap = ViewUtil.dipResourceToPx(context, R.dimen.block_gap);
     int min = ViewUtil.dipResourceToPx(context, R.dimen.block_min);
@@ -28,11 +30,11 @@ public class BlockerSprite implements Sprite {
     int max = height - min - groundHeight - gap;
     int upHeight = (int) (Math.random() * (max - min + 1)) + min;
     return new BlockerSprite(context, up, down, gap, groundHeight, min,
-        upHeight);
+        upHeight, X);
   }
 
   private BlockerSprite(Context context, Drawable up, Drawable down, int gap,
-      int groundHeight, int min, int upHeight) {
+      int groundHeight, int min, int upHeight, int X) {
     this.up = up;
     this.down = down;
     width = ViewUtil.getScreenWidth(context);
@@ -47,6 +49,7 @@ public class BlockerSprite implements Sprite {
     speed = ViewUtil.dipResourceToFloat(context, R.dimen.block_speed);
     currentX = width;
     this.currentUpHeight = upHeight;
+    this.X = X;
   }
 
   @Override
@@ -54,15 +57,15 @@ public class BlockerSprite implements Sprite {
     if (status == STATUS_NOT_STARTED) {
       return;
     }
+    if (status == STATUS_NORMAL) {
+      currentX -= speed;
+    }
     up.setBounds((int) currentX, 0, (int) currentX + blockWidth,
         currentUpHeight);
     up.draw(canvas);
     down.setBounds((int) currentX, currentUpHeight + gap, (int) currentX
         + blockWidth, max);
     down.draw(canvas);
-    if (status == STATUS_NORMAL) {
-      currentX -= speed;
-    }
   }
 
   @Override
@@ -84,6 +87,16 @@ public class BlockerSprite implements Sprite {
           && ((bRight > left && bRight < right) || (bLeft > left && bLeft < right));
     } else {
       return false;
+    }
+  }
+
+  @Override
+  public int getScore() {
+    if (!scored && currentX < X) {
+      scored = true;
+      return 1;
+    } else {
+      return 0;
     }
   }
 }

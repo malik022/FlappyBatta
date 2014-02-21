@@ -14,4 +14,6 @@ public interface Sprite {
   boolean isAlive();
 
   boolean isHit(Sprite sprite);
+
+  int getScore();
 }

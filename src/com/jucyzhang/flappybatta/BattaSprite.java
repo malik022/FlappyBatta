@@ -112,4 +112,13 @@ public class BattaSprite implements Sprite {
     }
   }
 
+  @Override
+  public int getScore() {
+    return 0;
+  }
+
+  public int getX() {
+    return X;
+  }
+
 }

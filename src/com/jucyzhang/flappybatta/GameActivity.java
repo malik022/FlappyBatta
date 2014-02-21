@@ -51,8 +51,10 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private static final int SOUND_WING = 4;
 
   private BattaSprite battaSprite;
+  private ScoreSprite scoreSprite;
 
   private int blockerCount = 0;
+  private volatile int currentPoint = 0;
   private volatile int currentStatus = Sprite.STATUS_NOT_STARTED;
 
   @Override
@@ -109,7 +111,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
 
   public void showRestartDialog() {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("请选择");
+    builder.setTitle("本次分数:" + currentPoint);
     builder.setPositiveButton("再玩一次", new DialogInterface.OnClickListener() {
 
       @Override
@@ -133,10 +135,13 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
       soundPool.play(soundIds[SOUND_SWOOSHING], 0.5f, 0.5f, 1, 0, 1);
       sprites = new LinkedList<Sprite>();
       battaSprite = new BattaSprite(this);
+      scoreSprite = new ScoreSprite(this);
       sprites.add(battaSprite);
+      sprites.add(scoreSprite);
       HintSprite hintSprite = new HintSprite(this);
       sprites.add(hintSprite);
       blockerCount = 0;
+      currentPoint = 0;
       currentStatus = Sprite.STATUS_NOT_STARTED;
       if (surfaceCreated) {
         startDrawingThread();
@@ -237,15 +242,35 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
         if (blockerCount > NEW_BLOCKER_COUNT) {
           blockerCount = 0;
           BlockerSprite sprite = BlockerSprite.obtainRandom(getBaseContext(),
-              blockerUp, blockerDown);
+              blockerUp, blockerDown, battaSprite.getX());
           sprites.addFirst(sprite);
           Log.d(TAG, "new sprite");
         } else {
           blockerCount++;
         }
+        for (Sprite sprite : sprites) {
+          int point = sprite.getScore();
+          if (point > 0) {
+            onGetPoint(point);
+          }
+        }
       }
       Log.d("DrawingThread", "quit");
     }
+  }
+
+  private void onGetPoint(int point) {
+    currentPoint += point;
+    scoreSprite.setCurrentScore(currentPoint);
+    runOnUiThread(new Runnable() {
+
+      @Override
+      public void run() {
+        if (!isFinishing()) {
+          soundPool.play(soundIds[SOUND_POINT], 0.5f, 0.5f, 1, 0, 1);
+        }
+      }
+    });
   }
 
   private void onGameOver() {

@@ -44,4 +44,9 @@ public class HintSprite implements Sprite {
     return false;
   }
 
+  @Override
+  public int getScore() {
+    return 0;
+  }
+
 }
