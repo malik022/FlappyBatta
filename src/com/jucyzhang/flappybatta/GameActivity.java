@@ -38,7 +38,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private Drawable blockerUp;
   private Drawable blockerDown;
   private static final long GAP = 20;
-  private static final long NEW_BLOCKER_COUNT = 100;
+  private static final long NEW_BLOCKER_COUNT = 60;
 
   private Paint globalPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private boolean surfaceCreated = false;;
@@ -55,6 +55,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private BattaSprite battaSprite;
   private ScoreSprite scoreSprite;
   private GroundSprite groundSprite;
+  private SplashSprite splashSprite;
 
   private int blockerCount = 0;
   private volatile int currentPoint = 0;
@@ -151,6 +152,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
       battaSprite = new BattaSprite(this);
       scoreSprite = new ScoreSprite(this);
       groundSprite = new GroundSprite(this);
+      splashSprite = null;
       sprites.add(scoreSprite);
       sprites.add(groundSprite);
       sprites.add(battaSprite);
@@ -240,7 +242,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
           continue;
         }
         if (currentStatus == Sprite.STATUS_GAME_OVER) {
-          if (battaSprite.isHit(battaSprite)) {
+          if (battaSprite.isHit(battaSprite) && !splashSprite.isAlive()) {
             onGameOver();
             break;
           } else {
@@ -256,7 +258,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
           }
         }
         if (hit) {
-          sprites.addLast(new SplashSprite());
+          sprites.addLast(splashSprite = new SplashSprite());
           currentStatus = Sprite.STATUS_GAME_OVER;
           continue;
         }

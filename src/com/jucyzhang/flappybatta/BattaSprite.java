@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 public class BattaSprite implements Sprite {
 
@@ -89,9 +88,14 @@ public class BattaSprite implements Sprite {
     if (currentHeight + birdHeight > maxHeight) {
       currentHeight = maxHeight - birdHeight;
     }
-    Drawable bird = birds[(count++) / FLY_COUNT];
-    Log.d(TAG, "X:" + X + " currentHeight:" + currentHeight + " birdWidth:"
-        + birdWidth + " birdHeight:" + birdHeight);
+    Drawable bird = null;
+    if (status == Sprite.STATUS_GAME_OVER) {
+      bird = birds[0];
+    } else {
+      bird = birds[(count++) / FLY_COUNT];
+    }
+    // Log.d(TAG, "X:" + X + " currentHeight:" + currentHeight + " birdWidth:"
+    // + birdWidth + " birdHeight:" + birdHeight);
     bird.setBounds(X, currentHeight, X + birdWidth, currentHeight + birdHeight);
     bird.draw(canvas);
   }
