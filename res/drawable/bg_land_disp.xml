@@ -1,4 +1,0 @@
-<nine-patch xmlns:android="http://schemas.android.com/apk/res/android"
-    android:autoMirrored="true"
-    android:gravity="fill_vertical|left"
-    android:src="@drawable/bg_land" />

@@ -60,7 +60,7 @@ public class BlockerSprite implements Sprite {
     if (status == STATUS_NORMAL) {
       currentX -= speed;
     }
-    up.setBounds((int) currentX, 0, (int) currentX + blockWidth,
+    up.setBounds((int) currentX, 0, (int) (currentX + blockWidth),
         currentUpHeight);
     up.draw(canvas);
     down.setBounds((int) currentX, currentUpHeight + gap, (int) currentX

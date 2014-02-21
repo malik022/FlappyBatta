@@ -52,6 +52,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
 
   private BattaSprite battaSprite;
   private ScoreSprite scoreSprite;
+  private GroundSprite groundSprite;
 
   private int blockerCount = 0;
   private volatile int currentPoint = 0;
@@ -136,8 +137,10 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
       sprites = new LinkedList<Sprite>();
       battaSprite = new BattaSprite(this);
       scoreSprite = new ScoreSprite(this);
-      sprites.add(battaSprite);
+      groundSprite = new GroundSprite(this);
       sprites.add(scoreSprite);
+      sprites.add(groundSprite);
+      sprites.add(battaSprite);
       HintSprite hintSprite = new HintSprite(this);
       sprites.add(hintSprite);
       blockerCount = 0;
