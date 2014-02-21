@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.umeng.update.UmengUpdateAgent;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,12 +26,18 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.umeng.update.UmengUpdateAgent;
+
 public class GameActivity extends Activity implements Callback, OnClickListener {
+
+  private static final boolean SHOW_FPS = false;
+
   private SurfaceView surfaceView;
   private SurfaceHolder holder;
   private LinkedList<Sprite> sprites;
   private SoundPool soundPool;
 
+  @SuppressWarnings("unused")
   private static final String TAG = "GameActivity";
   private Drawable blockerUp;
   private Drawable blockerDown;
@@ -56,6 +60,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private ScoreSprite scoreSprite;
   private GroundSprite groundSprite;
   private SplashSprite splashSprite;
+  private FpsSprite fpsSprite;
 
   private int blockerCount = 0;
   private volatile int currentPoint = 0;
@@ -155,6 +160,12 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
       splashSprite = null;
       sprites.add(scoreSprite);
       sprites.add(groundSprite);
+      if (SHOW_FPS) {
+        fpsSprite = new FpsSprite(this);
+        sprites.add(fpsSprite);
+      } else {
+        fpsSprite = null;
+      }
       sprites.add(battaSprite);
       HintSprite hintSprite = new HintSprite(this);
       sprites.add(hintSprite);
@@ -217,6 +228,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
     public void run() {
       super.run();
       while (!Thread.interrupted()) {
+        long startTime = System.currentTimeMillis();
         Canvas canvas = holder.lockCanvas();
         try {
           cleanCanvas(canvas);
@@ -227,16 +239,20 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
               sprite.onDraw(canvas, globalPaint, currentStatus);
             } else {
               iterator.remove();
-              Log.d(TAG, "remove sprite");
+              // Log.d(TAG, "remove sprite");
             }
           }
         } finally {
           holder.unlockCanvasAndPost(canvas);
         }
-        try {
-          sleep(GAP);
-        } catch (Exception e) {
-          break;
+        long duration = (System.currentTimeMillis() - startTime);
+        long gap = GAP - duration;
+        if (gap > 0) {
+          try {
+            sleep(gap);
+          } catch (Exception e) {
+            break;
+          }
         }
         if (currentStatus == Sprite.STATUS_NOT_STARTED) {
           continue;
@@ -267,7 +283,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
           BlockerSprite sprite = BlockerSprite.obtainRandom(getBaseContext(),
               blockerUp, blockerDown, battaSprite.getX());
           sprites.addFirst(sprite);
-          Log.d(TAG, "new sprite");
+          // Log.d(TAG, "new sprite");
         } else {
           blockerCount++;
         }

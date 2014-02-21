@@ -12,7 +12,6 @@ public class BlockerSprite implements Sprite {
   private int height;
   private int gap;
   private int max;
-  private int min;
   private float currentX;
   private int currentUpHeight;
   private Drawable up;
@@ -29,18 +28,16 @@ public class BlockerSprite implements Sprite {
     int groundHeight = ViewUtil.dipResourceToPx(context, R.dimen.ground_height);
     int max = height - min - groundHeight - gap;
     int upHeight = (int) (Math.random() * (max - min + 1)) + min;
-    return new BlockerSprite(context, up, down, gap, groundHeight, min,
-        upHeight, X);
+    return new BlockerSprite(context, up, down, gap, groundHeight, upHeight, X);
   }
 
   private BlockerSprite(Context context, Drawable up, Drawable down, int gap,
-      int groundHeight, int min, int upHeight, int X) {
+      int groundHeight, int upHeight, int X) {
     this.up = up;
     this.down = down;
     width = ViewUtil.getScreenWidth(context);
     height = ViewUtil.getScreenHeight(context);
     // Log.d(TAG, "height:" + height);
-    this.min = min;
     // Log.d(TAG, "groundHeight:" + groundHeight);
     this.max = height - groundHeight;
     // Log.d(TAG, "max:" + max);
