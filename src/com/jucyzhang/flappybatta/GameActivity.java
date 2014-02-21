@@ -256,6 +256,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
           }
         }
         if (hit) {
+          sprites.addLast(new SplashSprite());
           currentStatus = Sprite.STATUS_GAME_OVER;
           continue;
         }
