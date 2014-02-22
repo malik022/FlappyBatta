@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 public class SplashSprite implements Sprite {
-  private static final int LIFE = 18;
+  private static final int LIFE = 25;
   private int currentLife = -1;
   private static final int COLOR = 255;
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class BlockerSprite implements Sprite {
 
@@ -21,12 +22,21 @@ public class BlockerSprite implements Sprite {
   private boolean scored = false;
 
   public static BlockerSprite obtainRandom(Context context, Drawable up,
-      Drawable down, int X) {
+      Drawable down, int X, int lastBlockY) {
     int height = ViewUtil.getScreenHeight(context);
+    int gapMax = ViewUtil.dipResourceToPx(context, R.dimen.block_gap_max);
     int gap = ViewUtil.dipResourceToPx(context, R.dimen.block_gap);
     int min = ViewUtil.dipResourceToPx(context, R.dimen.block_min);
     int groundHeight = ViewUtil.dipResourceToPx(context, R.dimen.ground_height);
     int max = height - min - groundHeight - gap;
+    int maxGap = ViewUtil.dipResourceToPx(context, R.dimen.block_gap_max)
+        + height / 2;
+    max = Math.min(max, maxGap);
+    if (lastBlockY > 0) {
+      min = Math.max(min, lastBlockY - gapMax);
+      max = Math.min(max, lastBlockY + gapMax);
+    }
+    // Log.d(TAG, "max=" + max + " min=" + min);
     int upHeight = (int) (Math.random() * (max - min + 1)) + min;
     return new BlockerSprite(context, up, down, gap, groundHeight, upHeight, X);
   }
@@ -68,6 +78,10 @@ public class BlockerSprite implements Sprite {
   @Override
   public boolean isAlive() {
     return currentX + blockWidth > 0;
+  }
+
+  public int getUpHeight() {
+    return currentUpHeight;
   }
 
   @Override

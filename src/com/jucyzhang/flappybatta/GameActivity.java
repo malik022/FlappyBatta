@@ -63,6 +63,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private FpsSprite fpsSprite;
 
   private int blockerCount = 0;
+  private int lastBlockY = 0;
   private volatile int currentPoint = 0;
   private volatile int currentStatus = Sprite.STATUS_NOT_STARTED;
 
@@ -171,6 +172,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
       sprites.add(hintSprite);
       blockerCount = 0;
       currentPoint = 0;
+      lastBlockY = 0;
       currentStatus = Sprite.STATUS_NOT_STARTED;
       if (alertDialog != null && alertDialog.isShowing()) {
         alertDialog.dismiss();
@@ -281,7 +283,8 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
         if (blockerCount > NEW_BLOCKER_COUNT) {
           blockerCount = 0;
           BlockerSprite sprite = BlockerSprite.obtainRandom(getBaseContext(),
-              blockerUp, blockerDown, battaSprite.getX());
+              blockerUp, blockerDown, battaSprite.getX(), lastBlockY);
+          lastBlockY = sprite.getUpHeight();
           sprites.addFirst(sprite);
           // Log.d(TAG, "new sprite");
         } else {
