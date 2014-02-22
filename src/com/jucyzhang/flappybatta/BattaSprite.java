@@ -1,5 +1,7 @@
 package com.jucyzhang.flappybatta;
 
+import java.util.Random;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -8,6 +10,14 @@ import android.graphics.drawable.Drawable;
 
 public class BattaSprite implements Sprite {
 
+  private static final int[][] DRAWABLE_BIRD = new int[][] {
+      new int[] { R.drawable.img_bird_blue_1, R.drawable.img_bird_blue_2,
+          R.drawable.img_bird_blue_3 },
+      new int[] { R.drawable.img_bird_yellow_1, R.drawable.img_bird_yellow_2,
+          R.drawable.img_bird_yellow_3 },
+      new int[] { R.drawable.img_bird_red_1, R.drawable.img_bird_red_2,
+          R.drawable.img_bird_red_3 } };
+  private static Random random = new Random();
   private static final int FLY_COUNT = 6;
   private int count = 0;
   private Drawable birds[] = new Drawable[4];
@@ -28,9 +38,10 @@ public class BattaSprite implements Sprite {
 
   public BattaSprite(Context context) {
     Resources res = context.getResources();
-    birds[0] = birds[2] = res.getDrawable(R.drawable.img_bird_1);
-    birds[1] = res.getDrawable(R.drawable.img_bird_2);
-    birds[3] = res.getDrawable(R.drawable.img_bird_3);
+    int currentBird = random.nextInt(DRAWABLE_BIRD.length);
+    birds[0] = birds[2] = res.getDrawable(DRAWABLE_BIRD[currentBird][0]);
+    birds[1] = res.getDrawable(DRAWABLE_BIRD[currentBird][1]);
+    birds[3] = res.getDrawable(DRAWABLE_BIRD[currentBird][2]);
     birdHeight = ViewUtil.dipResourceToPx(context, R.dimen.bird_height);
     birdWidth = birdHeight * birds[0].getIntrinsicWidth()
         / birds[0].getIntrinsicHeight();

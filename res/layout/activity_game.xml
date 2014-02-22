@@ -5,10 +5,11 @@
     tools:context=".GameActivity" >
 
     <ImageView
+        android:id="@+id/iv_background"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_general"
+        android:src="@drawable/bg_general_day"
         android:visibility="visible" />
 
     <SurfaceView

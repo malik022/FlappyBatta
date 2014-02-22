@@ -3,6 +3,7 @@ package com.jucyzhang.flappybatta;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -25,6 +26,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
 import com.umeng.update.UmengUpdateAgent;
 
@@ -33,7 +35,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
    * set to true in order to print fps in screen.
    */
   private static final boolean SHOW_FPS = false;
-
+  private ImageView ivBackground;
   private SurfaceView surfaceView;
   private SurfaceHolder holder;
   private LinkedList<Sprite> sprites;
@@ -45,6 +47,8 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private Drawable blockerDown;
   private static final long GAP = 20;
   private static final long NEW_BLOCKER_COUNT = 60;
+  private static final int[] BACKGROUND = new int[] {
+      R.drawable.bg_general_day, R.drawable.bg_general_night };
 
   private Paint globalPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private boolean surfaceCreated = false;;
@@ -69,10 +73,13 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private volatile int currentPoint = 0;
   private volatile int currentStatus = Sprite.STATUS_NOT_STARTED;
 
+  private Random random = new Random();
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_game);
+    ivBackground = (ImageView) findViewById(R.id.iv_background);
     surfaceView = (SurfaceView) findViewById(R.id.surface_view);
     surfaceView.setKeepScreenOn(true);
     holder = surfaceView.getHolder();
@@ -155,6 +162,8 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
 
   private void restart() {
     if (!isFinishing()) {
+      ivBackground.setImageResource(BACKGROUND[random
+          .nextInt(BACKGROUND.length)]);
       soundPool.play(soundIds[SOUND_SWOOSHING], 0.5f, 0.5f, 1, 0, 1);
       sprites = new LinkedList<Sprite>();
       battaSprite = new BattaSprite(this);
