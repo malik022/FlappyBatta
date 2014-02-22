@@ -29,7 +29,9 @@ import android.view.View.OnClickListener;
 import com.umeng.update.UmengUpdateAgent;
 
 public class GameActivity extends Activity implements Callback, OnClickListener {
-
+  /**
+   * set to true in order to print fps in screen.
+   */
   private static final boolean SHOW_FPS = false;
 
   private SurfaceView surfaceView;
