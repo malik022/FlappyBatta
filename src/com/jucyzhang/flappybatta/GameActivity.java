@@ -35,6 +35,10 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
    * set to true in order to print fps in screen.
    */
   private static final boolean SHOW_FPS = false;
+  /**
+   * set to false to disable coins.
+   */
+  private static final boolean ENABLE_COIN = true;
   private ImageView ivBackground;
   private SurfaceView surfaceView;
   private SurfaceHolder holder;
@@ -45,8 +49,10 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private static final String TAG = "GameActivity";
   private Drawable blockerUp;
   private Drawable blockerDown;
+  private Drawable coin;
   private static final long GAP = 20;
   private static final long NEW_BLOCKER_COUNT = 60;
+  private static final long NEW_COIN_COUNT = 60;
   private static final int[] BACKGROUND = new int[] {
       R.drawable.bg_general_day, R.drawable.bg_general_night };
 
@@ -69,6 +75,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
   private FpsSprite fpsSprite;
 
   private int blockerCount = 0;
+  private int coinCount = 0;
   private int lastBlockY = 0;
   private volatile int currentPoint = 0;
   private volatile int currentStatus = Sprite.STATUS_NOT_STARTED;
@@ -182,6 +189,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
       HintSprite hintSprite = new HintSprite(this);
       sprites.add(hintSprite);
       blockerCount = 0;
+      coinCount = (int) (NEW_COIN_COUNT / 2);
       currentPoint = 0;
       lastBlockY = 0;
       currentStatus = Sprite.STATUS_NOT_STARTED;
@@ -199,6 +207,7 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
     Resources res = getResources();
     blockerUp = res.getDrawable(R.drawable.img_block_up);
     blockerDown = res.getDrawable(R.drawable.img_block_down);
+    coin = res.getDrawable(R.drawable.img_coin);
     soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
     AssetManager assetManager = res.getAssets();
     soundIds = new int[5];
@@ -300,6 +309,16 @@ public class GameActivity extends Activity implements Callback, OnClickListener 
           // Log.d(TAG, "new sprite");
         } else {
           blockerCount++;
+        }
+        if (ENABLE_COIN) {
+          if (coinCount > NEW_COIN_COUNT) {
+            coinCount = 0;
+            CoinSprite sprite = new CoinSprite(getBaseContext(), coin);
+            sprites.addFirst(sprite);
+            // Log.d(TAG, "new coin");
+          } else {
+            coinCount++;
+          }
         }
         for (Sprite sprite : sprites) {
           int point = sprite.getScore();
